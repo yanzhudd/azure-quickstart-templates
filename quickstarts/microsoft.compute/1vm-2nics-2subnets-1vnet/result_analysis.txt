@@ -1,0 +1,246 @@
+Request verify service error: There is an error from the whatif procedure for generated template InvalidTemplate - Deployment template validation failed: 'The template parameter 'diagStorageAccountName' is not found. Please see https://aka.ms/arm-syntax-parameters for usage details.'.
+
+
+generated_template:
+Here is the equivalent ARM template in JSON format:
+
+```json
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "virtualMachineSize": {
+      "defaultValue": "Standard_DS1_v2",
+      "type": "String"
+    },
+    "adminUsername": {
+      "defaultValue": "zytest",
+      "type": "String"
+    },
+    "adminPassword": {
+      "defaultValue": "zytest",
+      "type": "SecureString"
+    },
+    "storageAccountType": {
+      "defaultValue": "Standard_LRS",
+      "type": "String"
+    },
+    "location": {
+      "defaultValue": "westus",
+      "type": "String"
+    },
+    "virtualMachineName": {
+      "defaultValue": "VM-MultiNic",
+      "type": "String"
+    },
+    "nic1Name": {
+      "defaultValue": "nic-1",
+      "type": "String"
+    },
+    "nic2Name": {
+      "defaultValue": "nic-2",
+      "type": "String"
+    },
+    "virtualNetworkName": {
+      "defaultValue": "virtualNetwork",
+      "type": "String"
+    },
+    "subnet1Name": {
+      "defaultValue": "subnet-1",
+      "type": "String"
+    },
+    "subnet2Name": {
+      "defaultValue": "subnet-2",
+      "type": "String"
+    },
+    "publicIPAddressName": {
+      "defaultValue": "publicIp",
+      "type": "String"
+    },
+    "networkSecurityGroupName": {
+      "defaultValue": "NSG",
+      "type": "String"
+    },
+    "networkSecurityGroupName2": {
+      "defaultValue": "subnet-2-nsg",
+      "type": "String"
+    }
+  },
+  "resources": [
+    {
+      "type": "Microsoft.Storage/storageAccounts",
+      "apiVersion": "2019-06-01",
+      "name": "[parameters(\'diagStorageAccountName\')]",
+      "location": "[parameters(\'location\')]",
+      "sku": {
+        "name": "[parameters(\'storageAccountType\')]"
+      },
+      "kind": "StorageV2"
+    },
+    {
+      "type": "Microsoft.Network/networkSecurityGroups",
+      "apiVersion": "2019-02-01",
+      "name": "[parameters(\'networkSecurityGroupName2\')]",
+      "location": "[parameters(\'location\')]"
+    },
+    {
+      "type": "Microsoft.Network/virtualNetworks",
+      "apiVersion": "2019-09-01",
+      "name": "[parameters(\'virtualNetworkName\')]",
+      "location": "[parameters(\'location\')]",
+      "properties": {
+        "addressSpace": {
+          "addressPrefixes": [
+            "10.0.0.0/16"
+          ]
+        },
+        "subnets": [
+          {
+            "name": "[parameters(\'subnet1Name\')]",
+            "properties": {
+              "addressPrefix": "10.0.0.0/24"
+            }
+          },
+          {
+            "name": "[parameters(\'subnet2Name\')]",
+            "properties": {
+              "addressPrefix": "10.0.1.0/24",
+              "networkSecurityGroup": {
+                "id": "[resourceId(\'Microsoft.Network/networkSecurityGroups\', parameters(\'networkSecurityGroupName2\'))]"
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "type": "Microsoft.Network/networkInterfaces",
+      "apiVersion": "2019-07-01",
+      "name": "[parameters(\'nic1Name\')]",
+      "location": "[parameters(\'location\')]",
+      "dependsOn": [
+        "[resourceId(\'Microsoft.Network/virtualNetworks\', parameters(\'virtualNetworkName\'))]",
+        "[resourceId(\'Microsoft.Network/networkSecurityGroups\', parameters(\'networkSecurityGroupName\'))]"
+      ],
+      "properties": {
+        "ipConfigurations": [
+          {
+            "name": "ipconfig1",
+            "properties": {
+              "privateIPAllocationMethod": "Dynamic",
+              "subnet": {
+                "id": "[resourceId(\'Microsoft.Network/virtualNetworks/subnets\', parameters(\'virtualNetworkName\'), parameters(\'subnet1Name\'))]"
+              },
+              "publicIPAddress": {
+                "id": "[resourceId(\'Microsoft.Network/publicIPAddresses\', parameters(\'publicIPAddressName\'))]"
+              }
+            }
+          }
+        ],
+        "networkSecurityGroup": {
+          "id": "[resourceId(\'Microsoft.Network/networkSecurityGroups\', parameters(\'networkSecurityGroupName\'))]"
+        }
+      }
+    },
+    {
+      "type": "Microsoft.Network/networkInterfaces",
+      "apiVersion": "2019-07-01",
+      "name": "[parameters(\'nic2Name\')]",
+      "location": "[parameters(\'location\')]",
+      "dependsOn": [
+        "[resourceId(\'Microsoft.Network/virtualNetworks\', parameters(\'virtualNetworkName\'))]"
+      ],
+      "properties": {
+        "ipConfigurations": [
+          {
+            "name": "ipconfig1",
+            "properties": {
+              "privateIPAllocationMethod": "Dynamic",
+              "subnet": {
+                "id": "[resourceId(\'Microsoft.Network/virtualNetworks/subnets\', parameters(\'virtualNetworkName\'), parameters(\'subnet2Name\'))]"
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "type": "Microsoft.Network/publicIPAddresses",
+      "apiVersion": "2019-02-01",
+      "name": "[parameters(\'publicIPAddressName\')]",
+      "location": "[parameters(\'location\')]",
+      "properties": {
+        "publicIPAllocationMethod": "Dynamic"
+      }
+    },
+    {
+      "type": "Microsoft.Network/networkSecurityGroups",
+      "apiVersion": "2019-02-01",
+      "name": "[parameters(\'networkSecurityGroupName\')]",
+      "location": "[parameters(\'location\')]",
+      "properties": {
+        "securityRules": [
+          {
+            "name": "default-allow-rdp",
+            "properties": {
+              "priority": 1000,
+              "sourceAddressPrefix": "*",
+              "destinationPortRange": "3389",
+              "access": "Allow",
+              "protocol": "Tcp",
+              "direction": "Inbound"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "type": "Microsoft.Compute/virtualMachines",
+      "apiVersion": "2019-07-01",
+      "name": "[parameters(\'virtualMachineName\')]",
+      "location": "[parameters(\'location\')]",
+      "dependsOn": [
+        "[resourceId(\'Microsoft.Network/networkInterfaces\', parameters(\'nic1Name\'))]",
+        "[resourceId(\'Microsoft.Network/networkInterfaces\', parameters(\'nic2Name\'))]"
+      ],
+      "properties": {
+        "hardwareProfile": {
+          "vmSize": "[parameters(\'virtualMachineSize\')]"
+        },
+        "osProfile": {
+          "computerName": "[parameters(\'virtualMachineName\')]",
+          "adminUsername": "[parameters(\'adminUsername\')]",
+          "adminPassword": "[parameters(\'adminPassword\')]"
+        },
+        "storageProfile": {
+          "imageReference": {
+            "publisher": "MicrosoftWindowsServer",
+            "offer": "WindowsServer",
+            "sku": "2019-Datacenter",
+            "version": "latest"
+          },
+          "osDisk": {
+            "createOption": "FromImage",
+            "name": "[parameters(\'virtualMachineName\')]",
+            "managedDisk": {
+              "storageAccountType": "[parameters(\'storageAccountType\')]"
+            }
+          }
+        },
+        "networkProfile": {
+          "networkInterfaces": [
+            {
+              "id": "[resourceId(\'Microsoft.Network/networkInterfaces\', parameters(\'nic1Name\'))]"
+            },
+            {
+              "id": "[resourceId(\'Microsoft.Network/networkInterfaces\', parameters(\'nic2Name\'))]"
+            }
+          ]
+        }
+      }
+    }
+  ]
+}
+```
+
+Please replace `myResourceGroup` with your actual resource group name. Also, the `diagStorageAccountName` is generated by a function in the original ARM template, you need to replace it with a unique name in the script.

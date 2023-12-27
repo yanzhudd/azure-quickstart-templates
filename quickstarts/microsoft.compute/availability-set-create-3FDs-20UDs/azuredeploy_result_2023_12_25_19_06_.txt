@@ -1,0 +1,9 @@
+arm_template
+{"$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#", "contentVersion": "1.0.0.0", "parameters": {"location": {"type": "string", "defaultValue": "westus", "metadata": {"description": "Location for all resources."}}}, "resources": [{"type": "Microsoft.Compute/availabilitySets", "name": "availabilitySet1", "apiVersion": "2020-06-01", "location": "[parameters(\'location\')]", "properties": {"platformFaultDomainCount": 3, "platformUpdateDomainCount": 20}}]}
+
+
+cli_script
+```bash\n#!/bin/bash\n\n# Assign the location parameter to a variable\nlocation="westus" # Default value for location\n\n# Create an availability set with the given properties\naz vm availability-set create \\\n    --name "availabilitySet1" \\\n    --location "$location" \\\n    --platform-fault-domain-count 3 \\\n    --platform-update-domain-count 20 \\\n    --resource-group "<ResourceGroupName>" # Replace <ResourceGroupName> with your actual resource group name\n```\n\nPlease note that you need to replace `<ResourceGroupName>` with the actual name of the resource group where you want to create the availability set. The Azure CLI command `az vm availability-set create` is used to create an availability set with the specified name, location, platform fault domain count, and platform update domain count.
+
+
+verify_result

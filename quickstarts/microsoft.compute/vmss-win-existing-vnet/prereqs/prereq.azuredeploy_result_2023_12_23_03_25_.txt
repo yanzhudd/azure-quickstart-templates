@@ -1,0 +1,9 @@
+arm_template
+{"$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#", "contentVersion": "1.0.0.0", "parameters": {"location": {"type": "string", "defaultValue": "westus"}}, "variables": {"vnetName": "vnet01", "vnetAddressPrefix": "10.0.0.0/16", "subnetName": "subnet01", "subnetAddressPrefix": "10.0.1.0/24"}, "resources": [{"name": "[variables(\'vnetName\')]", "type": "Microsoft.Network/virtualNetworks", "location": "[parameters(\'location\')]", "apiVersion": "2020-08-01", "properties": {"addressSpace": {"addressPrefixes": ["[variables(\'vnetAddressPrefix\')]"]}, "subnets": [{"name": "[variables(\'subnetName\')]", "properties": {"addressPrefix": "[variables(\'subnetAddressPrefix\')]"}}]}}], "outputs": {"vnetName": {"type": "string", "value": "[variables(\'vnetName\')]"}, "subnetName": {"type": "string", "value": "[variables(\'subnetName\')]"}}}
+
+
+cli_script
+Based on the provided ARM template, the equivalent Azure CLI script would be:\n\n```bash\n#!/bin/bash\n\n# Define parameters\nlocation="westus"\n\n# Define variables\nvnetName="vnet01"\nvnetAddressPrefix="10.0.0.0/16"\nsubnetName="subnet01"\nsubnetAddressPrefix="10.0.1.0/24"\n\n# Create a virtual network\naz network vnet create \\\n    --name $vnetName \\\n    --location $location \\\n    --address-prefix $vnetAddressPrefix\n\n# Create a subnet\naz network vnet subnet create \\\n    --name $subnetName \\\n    --vnet-name $vnetName \\\n    --address-prefix $subnetAddressPrefix\n\n# Output vnetName and subnetName\necho "vnetName: $vnetName"\necho "subnetName: $subnetName"\n```\n\nThis script first defines the parameters and variables, then creates a virtual network and a subnet using the `az network vnet create` and `az network vnet subnet create` commands respectively. Finally, it outputs the names of the created virtual network and subnet.
+
+
+verify_result

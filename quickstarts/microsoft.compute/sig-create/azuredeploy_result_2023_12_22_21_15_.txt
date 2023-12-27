@@ -1,0 +1,9 @@
+arm_template
+{"$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#", "contentVersion": "1.0.0.0", "parameters": {"galleryName": {"type": "string", "metadata": {"description": "Name of the Shared Image Gallery."}, "defaultValue": "zytest"}, "location": {"type": "string", "defaultValue": "westus", "metadata": {"description": "Location of the Shared Image Gallery."}}}, "resources": [{"type": "Microsoft.Compute/galleries", "name": "[parameters(\'galleryName\')]", "apiVersion": "2019-12-01", "location": "[parameters(\'location\')]", "properties": {"description": "My Private Gallery"}}]}
+
+
+cli_script
+Here is the equivalent CLI script for the provided ARM template:\n\n```bash\n#!/bin/bash\n\n# Define the parameters\ngalleryName="zytest"\nlocation="westus"\n\n# Create a Shared Image Gallery\naz sig create --resource-group myResourceGroup \\\n  --gallery-name $galleryName \\\n  --location $location \\\n  --description "My Private Gallery"\n```\n\nIn this script, the `az sig create` command is used to create a Shared Image Gallery. The `--resource-group` parameter specifies the name of the resource group. The `--gallery-name` parameter specifies the name of the Shared Image Gallery. The `--location` parameter specifies the location of the Shared Image Gallery. The `--description` parameter provides a description for the Shared Image Gallery.
+
+
+verify_result

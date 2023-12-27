@@ -1,0 +1,202 @@
+D:\python\project\recommendation\azure-quickstart-templates\quickstarts\microsoft.compute\1-vm-loadbalancer-2-nics\azuredeploy.json
+
+Request verify service error: There is an error from the whatif procedure for generated template InvalidTemplate - Deployment template validation failed: 'The value for the template parameter 'adminPassword' at line '1' and column '177' is not provided. Please see https://aka.ms/arm-create-parameter-file for usage details.'.
+
+generated template
+'Here is the equivalent ARM template:
+
+```json
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "adminPassword": {
+      "type": "string"
+    },
+    "adminUsername": {
+      "type": "string"
+    },
+    "dnsNameforLBIP": {
+      "type": "string"
+    },
+    "securityType": {
+      "type": "string"
+    },
+    "OSVersion": {
+      "type": "string"
+    },
+    "location": {
+      "type": "string"
+    },
+    "storageAccountName": {
+      "type": "string"
+    },
+    "vmSize": {
+      "type": "string"
+    }
+  },
+  "resources": [
+    {
+      "type": "Microsoft.Storage/storageAccounts",
+      "apiVersion": "2019-06-01",
+      "name": "[parameters(\'storageAccountName\')]",
+      "location": "[parameters(\'location\')]",
+      "sku": {
+        "name": "Standard_LRS"
+      },
+      "kind": "StorageV2"
+    },
+    {
+      "type": "Microsoft.Network/publicIPAddresses",
+      "apiVersion": "2019-12-01",
+      "name": "myPublicIP",
+      "location": "[parameters(\'location\')]",
+      "properties": {
+        "publicIPAllocationMethod": "Dynamic",
+        "dnsSettings": {
+          "domainNameLabel": "[parameters(\'dnsNameforLBIP\')]"
+        }
+      }
+    },
+    {
+      "type": "Microsoft.Network/loadBalancers",
+      "apiVersion": "2019-12-01",
+      "name": "myLB",
+      "location": "[parameters(\'location\')]",
+      "dependsOn": [
+        "[resourceId(\'Microsoft.Network/publicIPAddresses\', \'myPublicIP\')]"
+      ],
+      "properties": {
+        "frontendIPConfigurations": [
+          {
+            "name": "LoadBalancerFrontEnd",
+            "properties": {
+              "publicIPAddress": {
+                "id": "[resourceId(\'Microsoft.Network/publicIPAddresses\', \'myPublicIP\')]"
+              }
+            }
+          }
+        ],
+        "backendAddressPools": [
+          {
+            "name": "BackendPool1"
+          }
+        ]
+      }
+    },
+    {
+      "type": "Microsoft.Network/networkSecurityGroups",
+      "apiVersion": "2019-12-01",
+      "name": "Subnet-1-nsg",
+      "location": "[parameters(\'location\')]"
+    },
+    {
+      "type": "Microsoft.Network/virtualNetworks",
+      "apiVersion": "2019-12-01",
+      "name": "myVNET",
+      "location": "[parameters(\'location\')]",
+      "dependsOn": [
+        "[resourceId(\'Microsoft.Network/networkSecurityGroups\', \'Subnet-1-nsg\')]"
+      ],
+      "properties": {
+        "addressSpace": {
+          "addressPrefixes": [
+            "10.0.0.0/16"
+          ]
+        },
+        "subnets": [
+          {
+            "name": "Subnet-1",
+            "properties": {
+              "addressPrefix": "10.0.0.0/24",
+              "networkSecurityGroup": {
+                "id": "[resourceId(\'Microsoft.Network/networkSecurityGroups\', \'Subnet-1-nsg\')]"
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "type": "Microsoft.Compute/virtualMachines",
+      "apiVersion": "2019-12-01",
+      "name": "myVM",
+      "location": "[parameters(\'location\')]",
+      "dependsOn": [
+        "[resourceId(\'Microsoft.Storage/storageAccounts\', parameters(\'storageAccountName\'))]",
+        "[resourceId(\'Microsoft.Network/networkInterfaces\', \'nic1\')]",
+        "[resourceId(\'Microsoft.Network/networkInterfaces\', \'nic2\')]"
+      ],
+      "properties": {
+        "hardwareProfile": {
+          "vmSize": "[parameters(\'vmSize\')]"
+        },
+        "osProfile": {
+          "computerName": "myVM",
+          "adminUsername": "[parameters(\'adminUsername\')]",
+          "adminPassword": "[parameters(\'adminPassword\')]"
+        },
+        "storageProfile": {
+          "imageReference": {
+            "publisher": "MicrosoftWindowsServer",
+            "offer": "WindowsServer",
+            "sku": "[parameters(\'OSVersion\')]",
+            "version": "latest"
+          },
+          "osDisk": {
+            "createOption": "FromImage"
+          },
+          "dataDisks": [
+            {
+              "diskSizeGB": "1023",
+              "lun": 0,
+              "createOption": "Empty"
+            }
+          ]
+        },
+        "networkProfile": {
+          "networkInterfaces": [
+            {
+              "id": "[resourceId(\'Microsoft.Network/networkInterfaces\', \'nic1\')]"
+            },
+            {
+              "id": "[resourceId(\'Microsoft.Network/networkInterfaces\', \'nic2\')]"
+            }
+          ]
+        },
+        "diagnosticsProfile": {
+          "bootDiagnostics": {
+            "enabled": true,
+            "storageUri": "[reference(resourceId(\'Microsoft.Storage/storageAccounts\', parameters(\'storageAccountName\')), \'2019-06-01\').primaryEndpoints.blob]"
+          }
+        }
+      }
+    },
+    {
+      "type": "Microsoft.Compute/virtualMachines/extensions",
+      "apiVersion": "2019-12-01",
+      "name": "myVM/GuestAttestation",
+      "location": "[parameters(\'location\')]",
+      "dependsOn": [
+        "[resourceId(\'Microsoft.Compute/virtualMachines\', \'myVM\')]"
+      ],
+      "properties": {
+        "publisher": "Microsoft.Azure.Security.WindowsAttestation",
+        "type": "GuestAttestation",
+        "typeHandlerVersion": "1.0",
+        "autoUpgradeMinorVersion": true,
+        "settings": {
+          "AttestationConfig": {
+            "MaaSettings": {
+              "maaEndpoint": "",
+              "maaTenantName": "GuestAttestation"
+            }
+          }
+        }
+      }
+    }
+  ]
+}
+```
+
+Please replace the actual values of the parameters at the beginning of the template with your own values before deploying the template.'

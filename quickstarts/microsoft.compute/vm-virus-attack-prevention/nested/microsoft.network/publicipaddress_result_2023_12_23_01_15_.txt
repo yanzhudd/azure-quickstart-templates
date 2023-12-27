@@ -1,0 +1,9 @@
+arm_template
+{"$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#", "contentVersion": "1.0.0.0", "parameters": {"publicIPAddressName": {"type": "string", "defaultValue": "zytest"}, "publicIPAddressType": {"type": "string", "defaultValue": "Dynamic"}, "dnsNameForPublicIP": {"type": "string", "defaultValue": "zytest"}, "location": {"type": "string", "defaultValue": "westus"}, "tags": {"type": "object", "defaultValue": "zytest"}}, "resources": [{"apiVersion": "2020-08-01", "type": "Microsoft.Network/publicIPAddresses", "name": "[parameters(\'publicIPAddressName\')]", "location": "[parameters(\'location\')]", "tags": "[parameters(\'tags\')]", "properties": {"publicIPAllocationMethod": "[parameters(\'publicIPAddressType\')]", "dnsSettings": {"domainNameLabel": "[parameters(\'dnsNameForPublicIP\')]"}}}], "outputs": {"publicIPAddressName": {"type": "string", "value": "[parameters(\'publicIPAddressName\')]"}}}
+
+
+cli_script
+Here is the equivalent CLI script:\n\n```bash\n#!/bin/bash\n\n# Define the parameters\npublicIPAddressName="zytest"\npublicIPAddressType="Dynamic"\ndnsNameForPublicIP="zytest"\nlocation="westus"\ntags="zytest"\n\n# Create a public IP address\naz network public-ip create --name $publicIPAddressName --allocation-method $publicIPAddressType --dns-name $dnsNameForPublicIP --location $location --tags $tags\n```\n\nThis script first defines the parameters as variables, then uses the `az network public-ip create` command to create a public IP address with the specified parameters. The `--name` option specifies the name of the public IP address, the `--allocation-method` option specifies the allocation method (either "Static" or "Dynamic"), the `--dns-name` option specifies the DNS name for the public IP address, the `--location` option specifies the location for the public IP address, and the `--tags` option specifies the tags for the public IP address.
+
+
+verify_result

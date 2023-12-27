@@ -1,0 +1,9 @@
+arm_template
+{"$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#", "contentVersion": "1.0.0.0", "parameters": {"vnetName": {"type": "string", "defaultValue": "zytest"}, "location": {"type": "string", "defaultValue": "westus"}, "addressPrefix": {"type": "string", "defaultValue": "zytest"}, "subnets": {"type": "array", "defaultValue": "zytest"}, "tags": {"type": "object", "defaultValue": "zytest"}}, "resources": [{"apiVersion": "2020-08-01", "name": "[parameters(\'vnetName\')]", "type": "Microsoft.Network/virtualNetworks", "location": "[parameters(\'location\')]", "tags": "[parameters(\'tags\')]", "properties": {"addressSpace": {"addressPrefixes": ["[parameters(\'addressPrefix\')]"]}, "subnets": "[parameters(\'subnets\')]"}}]}
+
+
+cli_script
+Here is the equivalent CLI script:\n\n```bash\n#!/bin/bash\n\n# Define variables\nvnetName="zytest"\nlocation="westus"\naddressPrefix="zytest"\nsubnets="zytest"\ntags="zytest"\n\n# Create a virtual network\naz network vnet create \\\n  --name $vnetName \\\n  --location $location \\\n  --address-prefix $addressPrefix \\\n  --tags $tags\n\n# Add subnets to the virtual network\nfor subnet in $subnets\ndo\n  az network vnet subnet create \\\n    --name $subnet \\\n    --vnet-name $vnetName \\\n    --address-prefix $addressPrefix\ndone\n```\n\nPlease note that this script assumes that the `subnets` variable is a space-separated list of subnet names. If it\'s a JSON array, you\'ll need to parse it accordingly. Also, the `tags` variable is assumed to be a string, if it\'s a JSON object, you\'ll need to convert it to a string format that the `az network vnet create` command can accept.
+
+
+verify_result

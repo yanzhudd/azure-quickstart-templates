@@ -1,0 +1,9 @@
+arm_template
+{"$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#", "contentVersion": "1.0.0.0", "parameters": {"nsgName": {"type": "string", "defaultValue": "zytest"}, "location": {"type": "string", "defaultValue": "westus"}, "securityRules": {"type": "array", "defaultValue": "zytest"}, "tags": {"type": "object", "defaultValue": "zytest"}}, "variables": {}, "resources": [{"apiVersion": "2020-08-01", "type": "Microsoft.Network/networkSecurityGroups", "name": "[parameters(\'nsgName\')]", "location": "[parameters(\'location\')]", "tags": "[parameters(\'tags\')]", "properties": {"securityRules": "[parameters(\'securityRules\')]"}}], "outputs": {}}
+
+
+cli_script
+Here is the equivalent CLI script for the provided ARM template:\n\n```bash\n#!/bin/bash\n\n# Define parameters\nnsgName="zytest"\nlocation="westus"\nsecurityRules="zytest"\ntags="zytest"\n\n# Create a network security group\naz network nsg create \\\n  --name $nsgName \\\n  --location $location \\\n  --tags $tags\n\n# Add security rules to the network security group\nfor rule in $securityRules\ndo\n  az network nsg rule create \\\n    --nsg-name $nsgName \\\n    --name $rule \\\n    --priority 1000 \\\n    --access Allow \\\n    --protocol Tcp \\\n    --direction Inbound\ndone\n```\n\nPlease note that the `az network nsg rule create` command is a placeholder and may need to be adjusted based on the actual structure and content of your `securityRules` array. The `--priority`, `--access`, `--protocol`, and `--direction` options are also placeholders and should be replaced with the actual values you want to use.
+
+
+verify_result

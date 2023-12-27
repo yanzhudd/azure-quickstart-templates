@@ -1,0 +1,9 @@
+arm_template
+{"$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#", "contentVersion": "1.0.0.0", "parameters": {"location": {"type": "string", "defaultValue": "westus", "metadata": {"description": "Location for all resources."}}}, "resources": [{"type": "Microsoft.Compute/availabilitySets", "name": "availabilitySet1", "apiVersion": "2020-06-01", "location": "[parameters(\'location\')]", "properties": {"platformFaultDomainCount": 3, "platformUpdateDomainCount": 20}}]}
+
+
+cli_script
+Here is the equivalent CLI script for the provided ARM template:\n\n```bash\n#!/bin/bash\n\n# Define the parameters\nlocation="westus"\n\n# Create the availability set\naz compute availability-set create --name availabilitySet1 --resource-group myResourceGroup --location $location --platform-fault-domain-count 3 --platform-update-domain-count 20\n```\n\nPlease replace "myResourceGroup" with your actual resource group name.
+
+
+verify_result

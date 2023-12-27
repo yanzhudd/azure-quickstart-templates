@@ -1,0 +1,9 @@
+arm_template
+{"$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#", "contentVersion": "1.0.0.0", "parameters": {"location": {"type": "string", "defaultValue": "westus", "metadata": {"description": "Location for all resources."}}}, "variables": {"storageAccountName": "[concat(uniqueString(resourceGroup().id),\'storage\')]"}, "resources": [{"type": "Microsoft.Storage/storageAccounts", "name": "[variables(\'storageAccountName\')]", "apiVersion": "2021-04-01", "location": "[parameters(\'location\')]", "comments": "Storage account used to store VM disks", "tags": {"displayName": "Storage Account"}, "sku": {"name": "Standard_LRS"}, "kind": "Storage", "properties": {}}], "outputs": {"storageAccountName": {"type": "string", "value": "[variables(\'storageAccountName\')]"}, "storageAccountResourceId": {"type": "string", "value": "[resourceId(\'Microsoft.Storage/storageAccounts\', variables(\'storageAccountName\'))]"}}}
+
+
+cli_script
+Here is the equivalent CLI script:\n\n```bash\n#!/bin/bash\n\n# Define parameters\nlocation="westus"\n\n# Define variables\nstorageAccountName=$(az group show --name $(az group list --query [].name -o tsv) --query id -o tsv)storage\n\n# Create a storage account\naz storage account create --name $storageAccountName --location $location --kind Storage --sku Standard_LRS --tags displayName="Storage Account"\n\n# Output storage account name\necho "Storage Account Name: $storageAccountName"\n\n# Output storage account resource ID\nstorageAccountResourceId=$(az storage account show --name $storageAccountName --query id -o tsv)\necho "Storage Account Resource ID: $storageAccountResourceId"\n```\n\nThis script first defines the location parameter and the storage account name variable. It then creates a storage account with the specified name, location, kind, SKU, and tag. Finally, it outputs the storage account name and resource ID.
+
+
+verify_result

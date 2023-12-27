@@ -1,0 +1,9 @@
+arm_template
+{"$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#", "contentVersion": "1.0.0.0", "parameters": {}, "resources": [{"name": "createGallery", "type": "Microsoft.Resources/deployments", "apiVersion": "2019-09-01", "properties": {"mode": "Incremental", "templateLink": {"uri": "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/modules/Microsoft.Compute/galleries/create/1.0/azuredeploy.json", "contentVersion": "1.0.0.0"}, "parameters": {"galleryName": {"value": "[uniqueString(resourceGroup().id)]"}}}}], "outputs": {"galleryName": {"type": "string", "value": "[reference(\'createGallery\').outputs.galleryName.value]"}}}
+
+
+cli_script
+Based on the provided ARM template, the equivalent Azure CLI script would be:\n\n```bash\n#!/bin/bash\n\n# Create a deployment at resource group scope.\naz deployment group create --name createGallery --resource-group <resource-group-name> --template-uri https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/modules/Microsoft.Compute/galleries/create/1.0/azuredeploy.json --parameters galleryName=$(az group show --name <resource-group-name> --query id -o tsv | md5sum | cut -f1 -d " ")\n\n# Get the output of the deployment.\ngalleryName=$(az deployment group show --name createGallery --resource-group <resource-group-name> --query properties.outputs.galleryName.value -o tsv)\n\necho "Gallery Name: $galleryName"\n```\n\nPlease replace `<resource-group-name>` with your actual resource group name. This script creates a deployment at the resource group scope using the specified template and parameters, and then retrieves the output of the deployment. The `md5sum` and `cut` commands are used to generate a unique string based on the resource group id.
+
+
+verify_result

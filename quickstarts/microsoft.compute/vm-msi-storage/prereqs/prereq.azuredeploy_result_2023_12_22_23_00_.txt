@@ -1,0 +1,9 @@
+arm_template
+{"$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#", "contentVersion": "1.0.0.0", "parameters": {"location": {"type": "string", "defaultValue": "westus"}, "storageAccountName": {"type": "string", "defaultValue": "zytest"}}, "variables": {}, "resources": [{"apiVersion": "2019-04-01", "type": "Microsoft.Storage/storageAccounts", "name": "[parameters(\'storageAccountName\')]", "location": "[parameters(\'location\')]", "sku": {"name": "Standard_LRS"}, "kind": "Storage"}], "outputs": {"storageAccountName": {"type": "string", "value": "[parameters(\'storageAccountName\')]"}, "storageAccountResourceGroupName": {"type": "string", "value": "[resourceGroup().name]"}}}
+
+
+cli_script
+Here is the equivalent CLI script:\n\n```bash\n#!/bin/bash\n\n# Define parameters\nlocation="westus"\nstorageAccountName="zytest"\n\n# Create a storage account\naz storage account create --name $storageAccountName --location $location --sku Standard_LRS --kind Storage\n\n# Output storage account name and resource group name\necho "Storage Account Name: $storageAccountName"\necho "Storage Account Resource Group Name: $(az group show --name $storageAccountName --query name --output tsv)"\n```\n\nThis script first defines the parameters `location` and `storageAccountName` with their default values. Then it creates a storage account using the `az storage account create` command with the defined parameters. Finally, it outputs the storage account name and the resource group name.
+
+
+verify_result

@@ -1,0 +1,9 @@
+arm_template
+{"$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#", "contentVersion": "1.0.0.0", "parameters": {"nicName": {"type": "string", "defaultValue": "zytest"}, "subnetRef": {"type": "string", "defaultValue": "zytest"}, "privateIp": {"type": "string", "defaultValue": "zytest"}, "location": {"type": "string", "metadata": {"description": "Location for all resources."}, "defaultValue": "westus"}}, "resources": [{"type": "Microsoft.Network/networkInterfaces", "name": "[parameters(\'nicName\')]", "apiVersion": "2020-05-01", "location": "[parameters(\'location\')]", "properties": {"ipConfigurations": [{"name": "ipconfig1", "properties": {"privateIPAllocationMethod": "Static", "privateIPAddress": "[parameters(\'privateIp\')]", "subnet": {"id": "[parameters(\'subnetRef\')]"}}}]}}]}
+
+
+cli_script
+Here is the equivalent CLI script:\n\n```bash\n#!/bin/bash\n\n# Define the parameters\nnicName="zytest"\nsubnetRef="zytest"\nprivateIp="zytest"\nlocation="westus"\n\n# Create a network interface with a static private IP\naz network nic create --name $nicName --subnet $subnetRef --private-ip-address $privateIp --location $location\n```\n\nThis script first defines the parameters as variables. Then it uses the `az network nic create` command to create a network interface with the specified name, subnet, private IP address, and location.
+
+
+verify_result

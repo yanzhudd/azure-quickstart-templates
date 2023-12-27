@@ -1,0 +1,9 @@
+arm_template
+{"$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#", "contentVersion": "1.0.0.0", "parameters": {"vmName": {"type": "string", "metadata": {"description": "Name of the Virtual Machine"}, "defaultValue": "zytest"}, "location": {"type": "string", "defaultValue": "westus", "metadata": {"description": "Location for all resources."}}}, "resources": [{"apiVersion": "2016-04-30-preview", "type": "Microsoft.Compute/virtualMachines", "name": "[parameters(\'vmName\')]", "location": "[parameters(\'location\')]", "properties": {"storageProfile": {"osDisk": {"encryptionSettings": null}}}}]}
+
+
+cli_script
+Here is the equivalent CLI script:\n\n```bash\n#!/bin/bash\n\n# Define the parameters\nvmName="zytest"\nlocation="westus"\n\n# Create a virtual machine\naz vm create \\\n  --name $vmName \\\n  --location $location \\\n  --os-disk-encryption-set null\n```\n\nPlease note that the ARM template you provided is a simplified version and does not include all the necessary parameters to create a virtual machine, such as the image or size. The CLI command I provided is based on the information available in the template. You may need to add more parameters to the `az vm create` command based on your specific requirements.
+
+
+verify_result
