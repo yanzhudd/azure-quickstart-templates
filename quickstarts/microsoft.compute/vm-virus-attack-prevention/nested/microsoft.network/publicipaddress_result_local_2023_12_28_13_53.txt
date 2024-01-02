@@ -1,0 +1,9 @@
+arm_template
+{"$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#", "contentVersion": "1.0.0.0", "parameters": {"publicIPAddressName": {"type": "string", "defaultValue": "zytest"}, "publicIPAddressType": {"type": "string", "defaultValue": "Dynamic"}, "dnsNameForPublicIP": {"type": "string", "defaultValue": "zytest"}, "location": {"type": "string", "defaultValue": "westus"}, "tags": {"type": "object", "defaultValue": "zytest"}}, "resources": [{"apiVersion": "2020-08-01", "type": "Microsoft.Network/publicIPAddresses", "name": "[parameters(\'publicIPAddressName\')]", "location": "[parameters(\'location\')]", "tags": "[parameters(\'tags\')]", "properties": {"publicIPAllocationMethod": "[parameters(\'publicIPAddressType\')]", "dnsSettings": {"domainNameLabel": "[parameters(\'dnsNameForPublicIP\')]"}}}], "outputs": {"publicIPAddressName": {"type": "string", "value": "[parameters(\'publicIPAddressName\')]"}}}
+
+
+cli_script
+Below is the translated bash script from the provided ARM template and parameter values:\n\n```bash\n#!/bin/bash\n\n# Assign the template parameter values to variables\npublicIPAddressName="zytest"\npublicIPAddressType="Dynamic"\ndnsNameForPublicIP="zytest"\nlocation="westus"\ntags="zytest"\n\n# Create a public IP address resource using Azure CLI\naz network public-ip create \\\n    --name $publicIPAddressName \\\n    --location $location \\\n    --allocation-method $publicIPAddressType \\\n    --dns-name $dnsNameForPublicIP \\\n    --tags $tags\n\n# Output the name of the public IP address\necho "Public IP Address Name: $publicIPAddressName"\n```\n\nPlease note that the `tags` parameter in the ARM template is an object, but in the translation, it is treated as a string. If you intend to use a JSON object for tags, you will need to adjust the script to handle the JSON object correctly.
+
+
+verify_result

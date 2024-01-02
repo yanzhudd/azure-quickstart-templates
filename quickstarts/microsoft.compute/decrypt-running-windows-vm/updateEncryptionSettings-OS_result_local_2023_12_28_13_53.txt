@@ -1,0 +1,9 @@
+arm_template
+{"$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#", "contentVersion": "1.0.0.0", "parameters": {"vmName": {"type": "string", "metadata": {"description": "Name of the Virtual Machine"}, "defaultValue": "zytest"}, "location": {"type": "string", "defaultValue": "westus", "metadata": {"description": "Location for all resources."}}}, "resources": [{"apiVersion": "2016-04-30-preview", "type": "Microsoft.Compute/virtualMachines", "name": "[parameters(\'vmName\')]", "location": "[parameters(\'location\')]", "properties": {"storageProfile": {"osDisk": {"encryptionSettings": {"enabled": false}}}}}]}
+
+
+cli_script
+Based on the provided ARM template and parameters, here is the equivalent Azure CLI script:\n\n```bash\n#!/bin/bash\n\n# Assign the TemplateParameters to variables\nvmName="zytest" # Default value if not provided in the TemplateParameters\nlocation="westus" # Default value if not provided in the TemplateParameters\n\n# Create a Virtual Machine\naz vm create \\\n  --name $vmName \\\n  --location $location \\\n  --os-disk-encryption-set "" \\\n  --generate-ssh-keys\n```\n\nPlease note that the ARM template provided only specifies the `vmName` and `location` parameters and some properties under the `storageProfile` for the virtual machine. However, it lacks other required information such as `networkProfile`, `hardwareProfile`, and `osProfile` which are necessary to create a complete VM using the Azure CLI. The above script assumes that you want to use SSH keys for authentication, which the Azure CLI will automatically generate if they do not already exist. If you have specific requirements for the VM\'s size, image, network settings, etc., you will need to include those in the CLI command as well.
+
+
+verify_result
