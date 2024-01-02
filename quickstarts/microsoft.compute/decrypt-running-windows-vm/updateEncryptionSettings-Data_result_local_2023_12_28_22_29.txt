@@ -1,0 +1,9 @@
+arm_template
+{"$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#", "contentVersion": "1.0.0.0", "parameters": {"vmName": {"type": "string", "metadata": {"description": "Name of the Virtual Machine"}, "defaultValue": "zytest"}, "location": {"type": "string", "defaultValue": "westus", "metadata": {"description": "Location for all resources."}}}, "resources": [{"apiVersion": "2016-04-30-preview", "type": "Microsoft.Compute/virtualMachines", "name": "[parameters(\'vmName\')]", "location": "[parameters(\'location\')]", "properties": {"storageProfile": {"osDisk": {"encryptionSettings": null}}}}]}
+
+
+cli_script
+```bash\n#!/bin/bash\n\n# Template Parameters\nvmName="zytest" # Default value can be overridden by actual parameter value\nlocation="westus" # Default value can be overridden by actual parameter value\n\n# Create a virtual machine\naz vm create \\\n  --name $vmName \\\n  --location $location \\\n  --generate-ssh-keys\n```
+
+
+verify_result

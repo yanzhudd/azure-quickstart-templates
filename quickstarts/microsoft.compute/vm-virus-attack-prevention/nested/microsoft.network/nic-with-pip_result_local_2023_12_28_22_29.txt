@@ -1,0 +1,9 @@
+arm_template
+{"$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#", "contentVersion": "1.0.0.0", "parameters": {"nicName": {"type": "string", "defaultValue": "zytest"}, "publicIPAddressId": {"type": "string", "defaultValue": "zytest"}, "subnetId": {"type": "string", "defaultValue": "zytest"}, "privateIPAllocationMethod": {"type": "string", "defaultValue": "Dynamic", "allowedValues": ["Dynamic", "Static"]}, "location": {"type": "string", "defaultValue": "westus"}, "nsgId": {"type": "string", "defaultValue": ""}, "tags": {"type": "object", "defaultValue": "zytest"}}, "resources": [{"apiVersion": "2020-08-01", "type": "Microsoft.Network/networkInterfaces", "name": "[parameters(\'nicName\')]", "location": "[parameters(\'location\')]", "tags": "[parameters(\'tags\')]", "properties": {"networkSecurityGroup": {"id": "[parameters(\'nsgId\')]"}, "ipConfigurations": [{"name": "ipconfig", "properties": {"privateIPAllocationMethod": "[parameters(\'privateIPAllocationMethod\')]", "publicIPAddress": {"id": "[parameters(\'publicIPAddressId\')]"}, "subnet": {"id": "[parameters(\'subnetId\')]"}}}]}}], "outputs": {}}
+
+
+cli_script
+```bash\n#!/bin/bash\n\n# Define the parameters as variables\nnicName="zytest"\npublicIPAddressId="zytest"\nsubnetId="zytest"\nprivateIPAllocationMethod="Dynamic"\nlocation="westus"\nnsgId=""\ntags="zytest"\n\n# Create the network interface with the specified parameters\naz network nic create \\\n    --name $nicName \\\n    --location $location \\\n    --tags $tags \\\n    --network-security-group $nsgId \\\n    --ip-configurations name=ipconfig private-ip-address-allocation=$privateIPAllocationMethod public-ip-address $publicIPAddressId subnet $subnetId\n```
+
+
+verify_result

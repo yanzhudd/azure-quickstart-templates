@@ -1,0 +1,9 @@
+arm_template
+{"$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#", "contentVersion": "1.0.0.0", "parameters": {"galleryName": {"type": "string", "metadata": {"description": "Name of the Shared Image Gallery."}, "defaultValue": "zytest"}, "location": {"type": "string", "defaultValue": "westus", "metadata": {"description": "Location of the Shared Image Gallery."}}}, "resources": [{"type": "Microsoft.Compute/galleries", "name": "[parameters(\'galleryName\')]", "apiVersion": "2019-12-01", "location": "[parameters(\'location\')]", "properties": {"description": "My Private Gallery"}}]}
+
+
+cli_script
+Based on the provided ARM template and parameters, the equivalent Azure CLI script to create a Shared Image Gallery resource would look like this:\n\n```bash\n#!/bin/bash\n\n# Template Parameters\ngalleryName="zytest" # Default value for galleryName\nlocation="westus" # Default value for location\n\n# Create a Shared Image Gallery\naz sig create \\\n  --resource-group <ResourceGroupName> \\ # Replace <ResourceGroupName> with your actual resource group name\n  --gallery-name $galleryName \\\n  --location $location \\\n  --description "My Private Gallery"\n```\n\nPlease note that you need to replace `<ResourceGroupName>` with the actual name of the resource group where you want to create the Shared Image Gallery. The parameters `galleryName` and `location` are assigned default values as specified in the ARM template. If you have different values for these parameters, you should update the variables accordingly.
+
+
+verify_result
