@@ -1,0 +1,9 @@
+arm_template
+{"$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#", "contentVersion": "1.0.0.0", "parameters": {"location": {"type": "string", "defaultValue": "westus"}, "storageAccountName": {"type": "string", "defaultValue": "zytest"}}, "variables": {}, "resources": [{"apiVersion": "2019-04-01", "type": "Microsoft.Storage/storageAccounts", "name": "[parameters(\'storageAccountName\')]", "location": "[parameters(\'location\')]", "sku": {"name": "Standard_LRS"}, "kind": "Storage"}], "outputs": {"storageAccountName": {"type": "string", "value": "[parameters(\'storageAccountName\')]"}, "storageAccountResourceGroupName": {"type": "string", "value": "[resourceGroup().name]"}}}
+
+
+cli_script
+'content': '#!/bin/bash\n\n# Define variables\nlocation="westus"\nstorageAccountName="zytest"\n\n# Create a storage account\naz storage account create --name $storageAccountName --location $location --kind Storage --sku Standard_LRS', 'validation_results': [{'command': 'az storage account create --name $storageAccountName --location $location --kind Storage --sku Standard_LRS', 'is_valid': False, 'cmd_source': 'CommandSource.CORE_MODULE', 'validated_param': True, 'error_message': 'the following arguments are required: --resource-group/-g '}], 'command_count': 1, 'gpt_model': 'GPT_4_32k'
+
+
+verify_result
